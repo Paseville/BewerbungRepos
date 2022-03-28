@@ -8,7 +8,6 @@ const app = express();
 const mongoose = require("mongoose")
 
 const apiKey = process.env.API_KEY
-const adminPW = process.env.ADMIN_PW
 //initalise ejs
 app.set('view engine', 'ejs');
 
