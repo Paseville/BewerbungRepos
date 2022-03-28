@@ -85,7 +85,7 @@ class WindowSelectQRCodeOrPrint():
     def __init__(self):
         self.window=tk.Tk()
         self.window.grid()
-        self.window.ButtonReturn = tk.Button(self.window, text = 'Zurück',command = self.btReturnToWindowMain, height = 3,width = 20).grid(row = 1, column = 1)
+        self.window.ButtonReturn = tk.Button(self.window, text = 'ZurÃ¼ck',command = self.btReturnToWindowMain, height = 3,width = 20).grid(row = 1, column = 1)
         self.window.ButtonShowQRCode = tk.Button(self.window, text = 'QR-Code anzeigen',command = self.btShowQRCode,  height = 20, width = 35).grid(row = 2, column = 2)
         self.window.ButtonPrint = tk.Button(self.window, text = 'Ausdrucken',command = self.btPrintBill, height = 20, width = 35).grid(row = 2, column = 3)
 
@@ -195,7 +195,7 @@ class WindowQRCode():
         #image1 = tk.PhotoImage(file = "C:\Program Files\TestCode.png")
         #label1 = tk.Label(self.window, image=image1).grid(row = 1, column = 1)
         #__________________________________________________
-        self.window.ButtonReturn = tk.Button(self.window, text = 'Zurück',height = 3,width = 20, command = self.returnSelectQRCodeOrPrint).place(x = 250, y = 375)
+        self.window.ButtonReturn = tk.Button(self.window, text = 'ZurÃ¼ck',height = 3,width = 20, command = self.returnSelectQRCodeOrPrint).place(x = 250, y = 375)
         self.ButtonDone = tk.Button(self.window, text = 'Fertig',height = 3,width = 20, command =self.returnToMainMenu ).place(x = 400, y = 375)
         
     def returnToMainMenu(self):
@@ -244,7 +244,7 @@ class CompleteListWindow():
         self.scrollBar = tk.Scrollbar(self.window)
         self.scrollBar.grid(row = 0,column = 1)
         #create Return Button
-        self.window.ButtonReturn = tk.Button(self.window, text = 'Zurück',height = 3,width = 20, command = self.returnToMainMenu).place(x = 250, y = 375)
+        self.window.ButtonReturn = tk.Button(self.window, text = 'ZurÃ¼ck',height = 3,width = 20, command = self.returnToMainMenu).place(x = 250, y = 375)
         #create list for items and link scrollbar to it
         self.liBox = tk.Listbox(self.window, selectmode = tk.SINGLE, yscrollcommand = self.scrollBar.set)
         #get todays date as string
@@ -259,7 +259,7 @@ class CompleteListWindow():
                self.liBox.insert(tk.END, stringToDisplay)
         self.liBox.grid(row=0, column=0)
         #add Button for Selecting the currently marked Bill
-        self.selBtn = tk.Button(self.window, text = "Bestätigen", command = self.selectElement)
+        self.selBtn = tk.Button(self.window, text = "BestÃ¤tigen", command = self.selectElement)
         self.selBtn.grid(row=1, column=0)
        
     def runCompleteListWindow(self):
