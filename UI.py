@@ -1,5 +1,5 @@
 # -*- coding: iso-8859-15 -*-
-#required libs: urllib3, json, PIL, qrcode, adafruit_thermal_printer, pyserial, datetime
+#required libs: urllib3, json
 ###########################imports#########################################
 #import urllib3 to send request
 import urllib3
@@ -10,20 +10,18 @@ import json
 #import qrcode to generate qr code from link
 import qrcode
 #import PIL for working with images
-from PIL import *
+from PIL import Image, ImageTk
 import os.path
 #import datetime to get current date
 import datetime
 #######################################################################
 global completeBillList
-notPrint = False
-import serial
-import adafruit_thermal_printer
+
 #define http for requests
 http = urllib3.PoolManager()
 
 #initalise array which always contains newest bills
-global billObjects
+billObjects = []
 r = http.request('GET', "https://billgatesprojekt.herokuapp.com/get-all?auth=1234")
 completeBillList = json.loads(r.data.decode('utf-8'))
 class WindowMain():
@@ -110,6 +108,7 @@ class WindowSelectQRCodeOrPrint():
     def btShowQRCode(self):
         global completeBillList
         print('Event: btShowQRCode')
+        
         #go thought short array first if id not found there search complete list array
         sDBOrderID=str(self.sBillID)
         found = 0
@@ -117,14 +116,14 @@ class WindowSelectQRCodeOrPrint():
             if i["_id"] == sDBOrderID:
                 found = 1
                 authkey = i["randomAuthKey"]
+                updateDatabase(sDBOrderID)
                 break
         if (found == 0):
             for i in completeBillList:
                 if i["_id"] == sDBOrderID:
                     authkey = i["randomAuthKey"]
+                    updateDatabase(sDBOrderID)
                     break 
-
-
 
 
         #generate URL with random autkey as value
@@ -140,7 +139,27 @@ class WindowSelectQRCodeOrPrint():
     def btPrintBill(self):
         global completeBillList
         print('Event: btShowQRCode')
-        PrinterPrint(self.sBillID) 
+        
+        #go thought short array first if id not found there search complete list array
+        sDBOrderID=str(self.sBillID)
+        found = 0
+        for i in billObjects:
+            if i["_id"] == sDBOrderID:
+                found = 1
+                ########## ----------Print Function Here --------------------#################
+                print("I printed from small array")
+                updateDatabase(sDBOrderID)
+                break
+        if (found == 0):
+            for i in completeBillList:
+                if i["_id"] == sDBOrderID:
+                    print("I printed from big array")
+                    ###############----------------Print Function Here ------------#################
+                    updateDatabase(sDBOrderID)
+                    break 
+    
+
+        
         self.btReturnToWindowMain()
 
 class WaiterButton():
@@ -256,7 +275,7 @@ class CompleteListWindow():
             print(dateToday)
             if (dateToday[0:10] == i["created_at"][0:10]): #0:10 that only date is compared and not time
                 stringToDisplay =  "Tisch " + str(i["tableNumber"]) + " Time : " + i["created_at"][11:16]
-               self.liBox.insert(tk.END, stringToDisplay)
+                self.liBox.insert(tk.END, stringToDisplay)
         self.liBox.grid(row=0, column=0)
         #add Button for Selecting the currently marked Bill
         self.selBtn = tk.Button(self.window, text = "Bestätigen", command = self.selectElement)
@@ -287,97 +306,6 @@ class CompleteListWindow():
 def updateDatabase(billID):
     print("a request has been sent to https://billgatesprojekt.herokuapp.com/update/" + str(billID) + "?auth=1234")
     http.request("GET", "https://billgatesprojekt.herokuapp.com/update/" + str(billID) + "?auth=1234")
-
-
-def daytime():
-
-    today = datetime.date.today()
-    now = datetime.datetime.now()
-    dt_string = today.strftime("%d-%m-%Y")
-    now_string = now.strftime("%H:%M:%S")
-    todays_time = dt_string + '             ' + now_string
-    return todays_time
-
-def PrinterStart():
-    ## Statt Konsolenausgabe hier ein Label auf fenster
-    printer = False
-
-    if printer:
-        print("Printer has paper!")
-    else:
-        print("No Paper, or RX is disconnected!")
-        global NotPrint
-        NotPrint = True
-
-
-#prints bill with billID (searches both arrays from database completeArray and billObjects)
-def PrinterPrint(billID):
-    #print(NotPrint)
-    Bill = []
-    uart = serial.Serial("/dev/ttyUSB0", baudrate=19200, timeout=3000)
-    ThermalPrinter = adafruit_thermal_printer.get_printer_class(2.69)
-    printer = ThermalPrinter(uart, auto_warm_up=False)
-    printer.warm_up()
-    global billObjects
-    global completeBillList
-    # not NotPrint
-
-    printer.print('Bill Gate`(s)\nGasthaus')
-
-    printer.print('-------------------------------\nStr. Nr., PLZ Stadt\nWebsite\nTel.')
-
-    printer.print('Rechnung')
-
-    printer.print(daytime())
-    printer.print('Bon.Nr.              Geraet\n-------------------------------\nBezeichnung Einzel Menge Gesamt\n-------------------------------')
-
-    # Items printed
-    
-    
-    sDBOrderID = billID
-    found = 0
-    print(billObjects)
-    #Go through small array first to find bill, if not in there search big array
-    for i in billObjects:
-        print("Hello")
-        print(sDBOrderID)
-        print(i["_id"])
-        if (i['_id'] == sDBOrderID):
-            found = 1
-            Bill = i
-            Pay = Bill['totalBill']
-            updateDatabase(sDBOrderID)
-            for Item in Bill['boughtItems']:
-                print(Item)
-                Name = Item['itemName']
-                price = str(Item['itemPriceOne'])
-                count = str(Item['itemsBought'])
-                total= str(Item['itemPriceAll'])
-                #ljust for formatting the bill
-                completeLine = Name.ljust(13) + price.ljust(7) + count.ljust(6) + total
-                print(completeLine)
-                printer.print(completeLine)
-            break
-    if (found == 0):
-              completeBillList
-              for i in completeBillList:
-                if i["_id"] == sDBOrderID:
-                    Bill = i
-                    for Item in Bill['boughtItems']:
-                        Name = Item['itemName']
-                        price = str(Item['itemPriceOne'])
-                        count = str(Item['itemsBought'])
-                        total= str(Item['itemPriceAll'])
-                        completeLine = Name.ljust(13) + price.ljust(7) + count.ljust(6) + total
-                        printer.print(completeLine)
-                  
-                    break
-
-    #printer.print("gesamt: ", "{:.2f}".format(int(Bill["totalBill"])))
-    #.print("\nBezahlt: ", "{:.2f}".format(int(Bill["totalBill"])))
-
-    # printed text continiued
-    #printer.print("Es bedient: " + Bill['waiter'] + " Vielen Dank fuer Ihren Besuch!\nInhaber: Vorname Name")
 
 
 if __name__ == "__main__":
