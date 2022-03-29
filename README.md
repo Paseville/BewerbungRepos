@@ -9,4 +9,4 @@ pip install qrcode[pil]
 
 Die Python Anwendung verwendet die APIs der node.js Anwendung die auf dem Heroku Server deployed wurde.
 Die Datenbank verweist auf eine MongoDB Atlas TestDB.
-Der Node.js Anwendung wurde nur als Referenz beigelegt.
+Die Node.js Anwendung wurde nur als Referenz beigelegt.
