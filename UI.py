@@ -48,9 +48,9 @@ class WindowMain():
               w.grid(column = 2, row = 3)
         # padx 20pixel from border
         self.window.ButtonGetList=tk.Button(self.window, text = 'Liste Anzeigen',height = 3,width = 20,
-                                            command = self.btGetCompleteList).grid(column = 1, row = 3,padx=20)
+                                            command = self.btGetCompleteList).grid(column = 1, row = 2,padx=20)
         self.window.ButtonReload=tk.Button(self.window, text = 'Aktualisieren', height = 3, width = 20,
-                                           command = self.btReloadWaiterList).grid(column = 3, row = 3,padx=20)
+                                           command = self.btReloadWaiterList).grid(column = 3, row = 2,padx=20)
                                            
 
     def btGetCompleteList(self):
