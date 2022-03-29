@@ -1,5 +1,11 @@
 # BewerbungRepos
 
-Um das Programm zu testen wird eigentlich nur das UI.py File benötigt, welches dann mit der Webapplikation kommuniziert,
-die auf Heroku läuft. Die Datenbank läuft auf MongoDB Atlas.
-Der Node.js Server ist also nur zur Inspektion beigelegt.
+Sie können die Python Anwendung "UI.py" direkt starten. 
+Vor dem Start müssen folgende Python AddOns mit folgenden Befehlen installiert werden.
+
+pip install urllib3
+pip install qrcode[pil]
+
+Die Python Anwendung verwendet die APIs der node.js Anwendung die auf dem Heroku Server deployed wurde.
+Die Datenbank verweist auf eine MongoDB Atlas TestDB.
+Der Node.js Anwendung wurde nur als Referenz beigelegt.
