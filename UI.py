@@ -73,11 +73,12 @@ class WindowMain():
                 placeOnWindow(self.window, self.formattingFrame)
                 #Display Connection failed label and a Retry Button
             else:
-                self.formattingFrame.btRetry=tk.Button(self.formattingFrame, text = 'Erneut Versuchen', command = self.fctBtRetry)
-                self.formattingFrame.btRetry.place(anchor="c", relx=.5, rely=.5)
-                errorLabel = tk.Label(self.formattingFrame, text = "No Bills found or Database not online")
+                print("couldnt connect to database")
+                self.window.btRetry=tk.Button(self.window, text = 'Erneut Versuchen', command = self.fctBtRetry)
+                self.window.btRetry.place(anchor="c", relx=.5, rely=.55)
+                errorLabel = tk.Label(self.window, text = "No Bills found or Database not online")
                 errorLabel.place(anchor="c", relx=.5, rely=.5)
-                placeOnWindow(self.window, self.formattingFrame)
+                #placeOnWindow(self.window, self.formattingFrame)
                                            
 
     def btGetCompleteList(self):
@@ -316,11 +317,11 @@ class CompleteListWindow():
             self.liboxFrame.pack(side="top")
             placeOnWindow(self.window, self.formattingFrame)
         else:
-            self.formattingFrame.btRetry=tk.Button(self.window, text = 'Erneut Versuchen', command = self.fctBtRetry)
-            self.formattingFrame.btRetry.pack()
+            print("couldnt connect to database")
+            self.window.btRetry=tk.Button(self.window, text = 'Erneut Versuchen', command = self.fctBtRetry)
+            self.window.btRetry.place(anchor="c", relx=.5, rely=.55)
             errorLabel = tk.Label(self.window, text = "No Bills found or Database not online")
-            errorLabel.pack()
-            placeOnWindow(self.window, self.formattingFrame)
+            errorLabel.place(anchor="c", relx=.5, rely=.5)
        
     def runCompleteListWindow(self):
         self.window.title(" Rechnungen")
@@ -410,7 +411,7 @@ def PrinterPrint(billID):
             Bill = i
             updateDatabase(sDBOrderID)
             for x in Bill['boughtItems']:
-                Pay = Bill['totalBill']
+                Pay = str(Bill['totalBill']) +"$"
                 
                 print(adjustFormatting(x))
             break
@@ -425,7 +426,7 @@ def PrinterPrint(billID):
     #printer.print("\nTischnummer: " + str(Bill['tableNumber']))
     #printer.print("\nGesamt: " + "{:.2f}".format(Bill["totalBill"]) + "$\n\n\n\n\n")
     #printer.print("\nBezahlt: " + "{:.2f}".format(Bill["totalBill"]))
-
+    print(Pay.rjust(31))
     # printed text 
     #printer.print("Es bedient: " + Bill['waiter'] + " Vielen Dank fuer Ihren Besuch!")
 
