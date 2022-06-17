@@ -16,8 +16,8 @@ import os.path
 import datetime
 
 ## #########################init printer#########################
-import serial
-import adafruit_thermal_printer
+#import serial
+#import adafruit_thermal_printer
 global printer 
 global ThermalPrinter
 global uart
